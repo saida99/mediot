@@ -13,22 +13,24 @@ import lombok.ToString;
 
 @Entity
 
-@Data  @AllArgsConstructor @NoArgsConstructor @ToString 
-public class Doctor implements Serializable{
-	
-	
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+public class Doctor implements Serializable {
+
 	private static final long serialVersionUID = -1814602136747224775L;
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long idDoctor;
-	@Column(unique = true,nullable = false)
+	@Column(unique = true, nullable = false)
 	private String doctorId;
 	@Column(nullable = false)
 	private String firstName;
 	@Column(nullable = false)
 	private String lastName;
-	@Column(unique = true,nullable = false)
+	@Column(unique = true, nullable = false)
 	private String email;
 
 //	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -49,12 +51,10 @@ public class Doctor implements Serializable{
 //			  joinColumns = @JoinColumn(name = "id"), 
 //			  inverseJoinColumns = @JoinColumn(name = "id")
 //			)
-	
-	
+
 //	@OneToMany(mappedBy = "doctor")
 //	private Set<PatientConsultation> patientConsultations;
-	
-	 
+
 	private String encryptedPassword;
 	private String emilVerificationToken;
 //	@Column(nullable = false)

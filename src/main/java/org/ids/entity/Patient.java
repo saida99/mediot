@@ -14,13 +14,21 @@ import lombok.ToString;
 
 @Entity
 @DiscriminatorValue("Patient")
-@Data  @AllArgsConstructor @NoArgsConstructor @ToString 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Patient extends Personne {
-	
-	@Column(unique = true,nullable = false)
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -250173034612508724L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(unique = true, nullable = false)
 	private long idPatient;
-	public Patient() {
-		
-	}
+
+
 
 }

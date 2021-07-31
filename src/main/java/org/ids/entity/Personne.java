@@ -3,31 +3,30 @@ package org.ids.entity;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Entity
-@Inheritance(strategy=InheritanceType.TABLE_PER_CLASS)
 
-  @AllArgsConstructor @NoArgsConstructor @ToString
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@MappedSuperclass
 public class Personne implements Serializable {
-	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE)
-	@Column(unique = true,nullable = false)
-	private long idPersonne;
+
+	
+	private static final long serialVersionUID = -706804440768761254L;
 	@Column(nullable = false)
 	private String nom;
 	@Column(nullable = false)
 	private String prenom;
 	@Column(nullable = false)
-	private  String telephone;
+	private String telephone;
 	@Column(nullable = false)
 	private int age;
 	@Column(nullable = false)
@@ -40,5 +39,5 @@ public class Personne implements Serializable {
 	private String centre;
 	@Column(nullable = false)
 	private Date dateCreation;
-	
+
 }

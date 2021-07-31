@@ -1,7 +1,6 @@
 package org.ids.entity;
 
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,15 +12,19 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-
-@Data  @AllArgsConstructor @NoArgsConstructor @ToString 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Infirmier extends Personne {
-	
-	
-	@Column(unique = true,nullable = false)
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -854547182136097196L;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(unique = true, nullable = false)
 	private long idInfirmier;
-	public Infirmier() {
-		
-	}
 
 }

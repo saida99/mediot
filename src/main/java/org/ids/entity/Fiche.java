@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,5 +34,14 @@ public class Fiche implements Serializable {
 	private String courbe;
 	@Column(nullable = false)
 	private Date dateCreation;
+	
+	@ManyToOne
+	private Medecin medecin;
+	
+	@ManyToOne
+	private Infirmier infirmier;
+	
+	@ManyToOne
+	private Patient patient;
 
 }

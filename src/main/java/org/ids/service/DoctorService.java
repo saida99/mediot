@@ -1,7 +1,6 @@
 package org.ids.service;
 
 import java.util.List;
-
 import org.ids.entity.Doctor;
 import org.ids.shared.dto.DoctorDto;
 //import org.springframework.security.core.userdetails.UserDetailsService;

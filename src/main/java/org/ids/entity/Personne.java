@@ -23,20 +23,34 @@ public class Personne implements Serializable {
 	private static final long serialVersionUID = -706804440768761254L;
 	@Column(nullable = false)
 	private String nom;
+	
 	@Column(nullable = false)
 	private String prenom;
+	
 	@Column(nullable = false)
 	private String telephone;
+	
 	@Column(nullable = false)
 	private int age;
+	
 	@Column(nullable = false)
 	private String password;
+	
 	@Column(nullable = false)
 	private String province;
+	
 	@Column(nullable = false)
 	private String region;
+	
 	@Column(nullable = false)
 	private String centre;
+	
+	@Column(nullable = false)
+	private String cin;
+	
+	@Column(nullable = false)
+	private String cnss;
+	
 	@Column(nullable = false)
 	private Date dateCreation;
 

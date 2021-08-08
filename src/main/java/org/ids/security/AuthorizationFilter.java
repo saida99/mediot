@@ -47,10 +47,8 @@ public class AuthorizationFilter extends BasicAuthenticationFilter{
 			SecurityContextHolder.clearContext();
 
 		}
-
 		
 	}
-	
 	
 	
 	private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
@@ -75,8 +73,5 @@ public class AuthorizationFilter extends BasicAuthenticationFilter{
         
         return null;
     }
-	
-	
-	
 
 }

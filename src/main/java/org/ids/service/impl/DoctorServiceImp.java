@@ -2,9 +2,7 @@ package org.ids.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.EntityNotFoundException;
-
 import org.ids.entity.Doctor;
 import org.ids.repository.DoctorRepository;
 import org.ids.service.DoctorService;
@@ -64,7 +62,7 @@ public class DoctorServiceImp implements DoctorService {
 		System.out.println("doctor " + doctorEntity.getEncryptedPassword());
 
 		Doctor newDoc = doctorRepository.save(doctorEntity);
-
+		
 		DoctorDto DocDto = new DoctorDto();
 
 		BeanUtils.copyProperties(newDoc, DocDto);

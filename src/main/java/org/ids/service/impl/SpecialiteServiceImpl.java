@@ -11,6 +11,10 @@ import org.ids.service.SpecialiteService;
 import org.ids.shared.dto.SpecialiteDto;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -58,7 +62,7 @@ public class SpecialiteServiceImpl implements SpecialiteService {
 	}
 
 	@Override
-	public SpecialiteDto getSpecialiteById(long idSpecialite) {
+	public SpecialiteDto getSpecialiteById(Long idSpecialite) {
 		
 		Optional<Specialite> specialiteEntity = specialiteRepository.findById(idSpecialite);
 		
@@ -71,10 +75,12 @@ public class SpecialiteServiceImpl implements SpecialiteService {
 		BeanUtils.copyProperties(specialiteEntity, specialiteDto);
 		
 		return specialiteDto;
+		
+		
 	}
 
 	@Override
-	public List<SpecialiteDto> getAllSpecialite() {
+	public List<SpecialiteDto> getAllSpecialites() {
 	
 		List<Specialite> SpecialiteList = (List<Specialite>) specialiteRepository.findAll();
 			
@@ -91,7 +97,55 @@ public class SpecialiteServiceImpl implements SpecialiteService {
 
 		return specialiteDtoList;
 	}
+	@Override
+	public List<SpecialiteDto> getAllSpecialites(int page, int limit) {
 		
+		if (page > 0)
+			page -= 1;
+
+		List<SpecialiteDto> specialiteListDto = new ArrayList<>();
+
+		Pageable pageableRequest = PageRequest.of(page, limit);
+
+		Page<Specialite> doctorPage = specialiteRepository.findAll(pageableRequest);
+
+		List<Specialite> specialites = doctorPage.getContent();
+
+		for (Specialite d : specialites) {
+
+			SpecialiteDto specialiteDto = new SpecialiteDto();
+
+			BeanUtils.copyProperties(d, specialiteDto);
+
+			specialiteListDto.add(specialiteDto);
+		}
+
+		return specialiteListDto;
+	}
+
+
+	@Override
+	public SpecialiteDto updateSpecialite(String nom, SpecialiteDto specialiteDto) {
+	
+	
+		Specialite specialiteEntity = specialiteRepository.findAllByNom(nom);
+
+		if (specialiteEntity == null)
+			throw new UsernameNotFoundException(nom);
+
+		specialiteEntity.setNom(specialiteDto.getNom());
+		
+
+		Specialite specialiteUpdated = specialiteRepository.save(specialiteEntity);
+
+		SpecialiteDto speciaDto = new SpecialiteDto();
+
+		BeanUtils.copyProperties(specialiteUpdated, speciaDto);
+
+		return speciaDto;
+	}
+
+	
 	@Override
 	public void deleteSpecialite(String nom) {
 
@@ -101,20 +155,13 @@ public class SpecialiteServiceImpl implements SpecialiteService {
 	
 	System.out.println("specialiteEntity " + specialiteEntity);
 
-	if (specialiteEntity == null) {
+	if (specialiteEntity== null) {
 		
-		throw new EntityNotFoundException("ce compte n'existe pas");
+		throw new EntityNotFoundException("cette specialite n'existe pas");
 	}
 
 	specialiteRepository.delete(specialiteEntity);
 	
 	}
-
-	@Override
-	public SpecialiteDto updateSpecialite(String nom, SpecialiteDto specialiteDto) {
-		Specialite specialiteEntity = specialiteRepository.findAllByNom(nom);
-		return null;
-	}
-
 
 }

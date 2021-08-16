@@ -23,14 +23,12 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class RendezVous implements Serializable {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -6419102273606030960L;
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(unique = true, nullable = false)
-	private int IdRendezVous;
+	private Long IdRendezVous;
 	@Column(nullable = false)
 	private Date dateConsultation;
 	@Column(nullable = false)

@@ -7,15 +7,19 @@ public interface SpecialiteService {
 	
 	SpecialiteDto CreateSpecialite( SpecialiteDto specialiteDto);
 	
-	SpecialiteDto getSpecialite( String nom);
+	SpecialiteDto getSpecialite(String nom);
 
-	SpecialiteDto getSpecialiteById(long idSpecialite);
+	SpecialiteDto getSpecialiteById(Long specialiteId);
 	
-	public 	List <SpecialiteDto> getAllSpecialite();
+	public 	List <SpecialiteDto> getAllSpecialites();
+	
+	List<SpecialiteDto> getAllSpecialites(int page, int limit);
+
+	SpecialiteDto updateSpecialite(String nom, SpecialiteDto specialiteDto);
 
 	void deleteSpecialite (String nom);
+
 	
-	SpecialiteDto updateSpecialite(String nom, SpecialiteDto specialiteDto);
 	
 }
 

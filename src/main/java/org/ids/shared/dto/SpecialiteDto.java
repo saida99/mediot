@@ -7,9 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-/*@AllArgsConstructor
+@AllArgsConstructor
 @NoArgsConstructor
-@ToString*/
+@ToString
 @Data
 public class SpecialiteDto implements Serializable{
 
@@ -18,18 +18,7 @@ public class SpecialiteDto implements Serializable{
 	private Long idSpecialite;
 	private String nom;
 	
-	public Long getIdSpecialite() {
-		return idSpecialite;
-	}
-	public void setIdSpecialite(Long idSpecialite) {
-		this.idSpecialite = idSpecialite;
-	}
-	public String getNom() {
-		return nom;
-	}
-	public void setNom(String nom) {
-		this.nom = nom;
-	}
+	
 
 
 }

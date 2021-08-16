@@ -26,7 +26,7 @@ public class Specialite implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int idSpecialite;
+	private Long idSpecialite;
 	@Column(unique = true, nullable = false)
 	private String nom;
 	

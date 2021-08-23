@@ -1,6 +1,5 @@
 package org.ids.service;
-  
-import java.util.Date;
+
 import java.util.List; 
 import org.ids.shared.dto.RendezVousDto;
 
@@ -17,9 +16,9 @@ import org.ids.shared.dto.RendezVousDto;
   List<RendezVousDto> getAllRendezVous(int page, int limit);
   
  
-	 RendezVousDto updateRendezVous(Date date, RendezVousDto rendezVousDto);
+	 RendezVousDto updateRendezVous(Long idRendezVous, RendezVousDto rendezVousDto);
 	  
-	  void deleteRendezVous (Date date);
+	  void deleteRendezVous (Long idRendezVous);
   
   }
  

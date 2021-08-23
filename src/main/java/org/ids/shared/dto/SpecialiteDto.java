@@ -1,6 +1,9 @@
 package org.ids.shared.dto;
 
 import java.io.Serializable;
+import java.util.List;
+
+import org.ids.entity.Medecin;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +21,7 @@ public class SpecialiteDto implements Serializable{
 	private Long idSpecialite;
 	private String nom;
 	
-	
+	private List <Medecin> medecins ;
 
 
 }

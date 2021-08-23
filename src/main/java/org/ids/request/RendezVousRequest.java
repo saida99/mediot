@@ -9,6 +9,16 @@ import org.ids.entity.Infirmier;
 import org.ids.entity.Medecin;
 import org.ids.entity.Message;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Getter
 public class RendezVousRequest {
 
 	@NotNull(message="le champ dateConsultation  ne doit pas être null !")

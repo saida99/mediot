@@ -5,7 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.validation.Valid;
+
+import org.ids.exceptions.FicheException;
 import org.ids.request.FicheRequest;
+import org.ids.respense.ErrorMessages;
 import org.ids.respense.FicheRespense;
 import org.ids.service.FicheService;
 import org.ids.shared.dto.FicheDto;
@@ -45,15 +48,15 @@ public class FicheController {
 		return userRespense;
 		
 	}
-	@GetMapping("/fiches/{ficheId}")
-	public FicheRespense getFicheById(@PathVariable Long ficheId) {
+	@GetMapping("/fiches/{idFiche}")
+	public FicheRespense getFicheById(@PathVariable Long idFiche) {
 
 		FicheDto ficheDto = new FicheDto();
 		
 		FicheRespense ficheRespense = new FicheRespense();
 		try {
 			
-			ficheDto = ficheService.getFicheById(ficheId);
+			ficheDto = ficheService.getFicheById(idFiche);
 			
 			BeanUtils.copyProperties(ficheDto, ficheRespense);
 			
@@ -68,34 +71,34 @@ public class FicheController {
 	@PostMapping("/fiches")
 	public ResponseEntity<FicheRespense> createFiche(@RequestBody  @Valid FicheRequest ficheRequest) throws Exception {
 		
-		//if(((List<FicheRespense>) ficheRequest.getDateCreation()).isEmpty()) throw new 	FicheException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
+		if(ficheRequest.getCourbe().isEmpty()) throw new 	FicheException(ErrorMessages.MISSING_REQUIRED_FIELD.getErrorMessage());
 		
 		FicheDto ficheDto = new FicheDto();
 		
-		FicheRespense FicheRequest = new FicheRespense(); 
 		
-			BeanUtils.copyProperties(FicheRequest, ficheDto);
+		
+			BeanUtils.copyProperties(ficheRequest, ficheDto);
 			
 			FicheDto CreatedFicheDto = ficheService.CreateFiche(ficheDto);	
-			
-			BeanUtils.copyProperties(CreatedFicheDto, FicheRequest);
+			FicheRespense FicheResp = new FicheRespense(); 
+			BeanUtils.copyProperties(CreatedFicheDto, FicheResp);
 			
 	
-		return new ResponseEntity<FicheRespense>(FicheRequest, HttpStatus.CREATED);
+		return new ResponseEntity<FicheRespense>(FicheResp, HttpStatus.CREATED);
 	
 	}
 
 	
 	  //update
 	  
-	  @PutMapping("/fiches/{id}") public ResponseEntity<FicheRespense>
-	  updateFiche(@PathVariable Long id,@RequestBody FicheRequest ficheRequest){
+	  @PutMapping("/fiches/{idFiche}") 
+	  public ResponseEntity<FicheRespense> updateFiche(@PathVariable Long idFiche,@RequestBody FicheRequest ficheRequest){
 	  
 	  FicheDto ficheDto = new FicheDto();
 	  
 	  BeanUtils.copyProperties(ficheRequest, ficheDto);
 	  
-	  FicheDto updateFiche = ficheService.updateFiche(id, ficheDto);
+	  FicheDto updateFiche = ficheService.updateFiche(idFiche, ficheDto);
 	  
 	  FicheRespense ficheRespense = new FicheRespense();
 	  
@@ -107,10 +110,10 @@ public class FicheController {
 	  
 	  //delete fiche rest
 	  
-	  @DeleteMapping("/fiches/{ficheId}") public ResponseEntity
-	  <Map<String,Boolean>> deleteFiche(@PathVariable Long ficheId){
+	  @DeleteMapping("/fiches/{idFiche}") public ResponseEntity
+	  <Map<String,Boolean>> deleteFiche(@PathVariable Long idFiche){
 	  
-	  ficheService.deleteFiche(ficheId);
+	  ficheService.deleteFiche(idFiche);
 	  
 	  Map<String,Boolean> response = new HashMap<>();
 	  

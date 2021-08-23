@@ -12,6 +12,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.JoinColumn;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,12 +38,15 @@ public class Patient extends Personne {
 	@Column(unique = true, nullable = false)
 	private long idPatient;
 
+	@JsonIgnoreProperties
 	@OneToOne(mappedBy = "patient")
 	private Message message;
 	
+	@JsonIgnoreProperties
 	@ManyToMany( mappedBy = "patients")
 	private List <Medecin> medecins ;
 	
+	@JsonIgnoreProperties
 	@ManyToMany
 	@JoinTable(
 			  name = "patient_inf", 
@@ -49,6 +55,7 @@ public class Patient extends Personne {
 			)
 	private List <Infirmier> infirmiers ;
 	
+	@JsonIgnoreProperties
 	@OneToMany(mappedBy = "patient")
 	private List <Fiche> fiches ;
 

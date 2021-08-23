@@ -1,10 +1,10 @@
 package org.ids.service.impl;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import org.ids.entity.RendezVous;
 import org.ids.repository.RendezVousRepository;
 import org.ids.service.RendezVousService;
@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
+import org.springframework.stereotype.Service;
+@Service
+@Transactional
 public class RendezVousServiceImpl implements RendezVousService {
 
 	@Autowired
@@ -22,10 +24,11 @@ public class RendezVousServiceImpl implements RendezVousService {
 
 	@Override
 	public RendezVousDto CreateRendezVous(RendezVousDto rendezVousDto) {
-		List<RendezVous> checkRdv = rendezVousRepository.findByDateConsultation(rendezVousDto.getDateConsultation());
+		
+		Optional<RendezVous> checkRdv = rendezVousRepository.findByDateConsultation(rendezVousDto.getDateConsultation());
 
-		if (checkRdv != null)
-			throw new RuntimeException("ce compte déjà entregistrer");
+		if (checkRdv.isPresent())
+			throw new RuntimeException("ce rendez vous est  déjà entregistrer");
 
 		RendezVous RdvEntity = new RendezVous();
 
@@ -38,22 +41,25 @@ public class RendezVousServiceImpl implements RendezVousService {
 		BeanUtils.copyProperties(newRdv, RdvDto);
 
 		return RdvDto;
+		
 	}
 
 	@Override
 	public RendezVousDto getRendezVousById(Long idRendezVous) {
 
-		Optional<RendezVous> rendezVousEntity = rendezVousRepository.findById(idRendezVous);
+		Optional<RendezVous> rendezVousEntity = rendezVousRepository.findByIdRendezVous(idRendezVous);
 
-		if (rendezVousEntity == null)
+		if (!rendezVousEntity.isPresent())
 
 			throw new RuntimeException(idRendezVous + " introuvable ");
 
 		RendezVousDto RendezVousDto = new RendezVousDto();
 
-		BeanUtils.copyProperties(rendezVousEntity, RendezVousDto);
+		BeanUtils.copyProperties(rendezVousEntity.get(), RendezVousDto);
 
 		return RendezVousDto;
+	
+		
 	}
 
 	@Override
@@ -101,89 +107,48 @@ public class RendezVousServiceImpl implements RendezVousService {
 	}
 
 	@Override
-	public RendezVousDto updateRendezVous(Date date, RendezVousDto rendezVousDto) {
-		RendezVous RendezVousEntity = (RendezVous) rendezVousRepository.findByDateConsultation(date);
+	public RendezVousDto updateRendezVous(Long idRendezVous, RendezVousDto rendezVousDto) {
+		Optional<RendezVous> RendezVousEntity = rendezVousRepository.findByIdRendezVous(idRendezVous);
 		  
-		  if (RendezVousEntity == null) throw new
+		  if (!RendezVousEntity.isPresent()) throw new
 		  RuntimeException("ce rendez vous  est introuvable");
 		  
-		  RendezVousEntity.setDateConsultation(rendezVousDto.getDateConsultation());
-		  RendezVousEntity.setDescription(rendezVousDto.getDescription());
-		  RendezVousEntity.setHeureDebut(rendezVousDto.getHeureDebut());
-		  RendezVousEntity.setHeureFin(rendezVousDto.getHeureFin());
-		  RendezVousEntity.setMessage(rendezVousDto.getMessage());
-		  RendezVousEntity.setStatut(rendezVousDto.getStatut());
-		  RendezVousEntity.setMedecin(rendezVousDto.getMedecin());
-		  RendezVousEntity.setInfirmier(rendezVousDto.getInfirmier());
+		  RendezVousEntity.get().setDateConsultation(rendezVousDto.getDateConsultation());
+		  RendezVousEntity.get().setDescription(rendezVousDto.getDescription());
+		  RendezVousEntity.get().setHeureDebut(rendezVousDto.getHeureDebut());
+		  RendezVousEntity.get().setHeureFin(rendezVousDto.getHeureFin());
+		  RendezVousEntity.get().setMessage(rendezVousDto.getMessage());
+		  RendezVousEntity.get().setStatut(rendezVousDto.getStatut());
+		  RendezVousEntity.get().setMedecin(rendezVousDto.getMedecin());
+		  RendezVousEntity.get().setInfirmier(rendezVousDto.getInfirmier());
 		  
-		  RendezVous RdvUpdated = rendezVousRepository.save(RendezVousEntity);
+		  RendezVous RdvUpdated = rendezVousRepository.save(RendezVousEntity.get());
 		  
 		  RendezVousDto rdvDto = new RendezVousDto();
 		  
 		  BeanUtils.copyProperties(RdvUpdated, rdvDto);
 		  
 		  return rdvDto;
+			
 		  }
 	
 
 	@Override
-	public void deleteRendezVous(Date date) {
-		 
-		  RendezVous rendezVousEntity = (RendezVous) rendezVousRepository.findByDateConsultation(date);
-		  
-		  System.out.println(" date du RendezVous " + date);
-		  System.out.println("rendezVousEntity " + rendezVousEntity);
-		  
-		  if (rendezVousEntity == null) { throw new
-		  EntityNotFoundException("ce rendezVous   n'existe pas"); }
-		  
-		  rendezVousRepository.delete(rendezVousEntity); }
+	public void deleteRendezVous(Long idRendezVous) {
 
+
+	Optional<RendezVous> rendezVousEntity = rendezVousRepository.findByIdRendezVous(idRendezVous);
+	
+	System.out.println("rendezVousEntity " + rendezVousEntity);
+
+	if (!rendezVousEntity.isPresent()) {
+		
+		throw new EntityNotFoundException("ce rendez Vous n'existe pas");
+	} 
+	rendezVousRepository.delete(rendezVousEntity.get());
+	
 	}
 	
-		/*
-		 * }
-		 * 
-		 * 
-		 * @Override public RendezVousDto updateRendezVous(Long id, RendezVousDto
-		 * rendezVousDto) {
-		 * 
-		 * RendezVous RendezVousEntity = rendezVousRepository.findByIdRendezVous(id);
-		 * 
-		 * if (RendezVousEntity == null) throw new
-		 * RuntimeException("ce rendez vous  est introuvable");
-		 * 
-		 * RendezVousEntity.setDateConsultation(rendezVousDto.getDateConsultation());
-		 * RendezVousEntity.setDescription(rendezVousDto.getDescription());
-		 * RendezVousEntity.setHeureDebut(rendezVousDto.getHeureDebut());
-		 * RendezVousEntity.setHeureFin(rendezVousDto.getHeureFin());
-		 * RendezVousEntity.setMessage(rendezVousDto.getMessage());
-		 * RendezVousEntity.setStatut(rendezVousDto.getStatut());
-		 * RendezVousEntity.setMedecin(rendezVousDto.getMedecin());
-		 * RendezVousEntity.setInfirmier(rendezVousDto.getInfirmier());
-		 * 
-		 * RendezVous RdvUpdated = rendezVousRepository.save(RendezVousEntity);
-		 * 
-		 * RendezVousDto rdvDto = new RendezVousDto();
-		 * 
-		 * BeanUtils.copyProperties(RdvUpdated, rdvDto);
-		 * 
-		 * return rdvDto; }
-		 * 
-		 * 
-		 * @Override public void deleteRendezVous(Long id) {
-		 * 
-		 * RendezVous rendezVousEntity = rendezVousRepository.findByIdRendezVous(id);
-		 * 
-		 * System.out.println("idRendezVous " + id);
-		 * System.out.println("rendezVousEntity " + rendezVousEntity);
-		 * 
-		 * if (rendezVousEntity == null) { throw new
-		 * EntityNotFoundException("ce rendezVous   n'existe pas"); }
-		 * 
-		 * rendezVousRepository.delete(rendezVousEntity); }
-		 * 
-		 * 
-		 * }
-		 */
- 
+
+}
+	

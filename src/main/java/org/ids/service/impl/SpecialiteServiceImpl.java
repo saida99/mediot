@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -27,13 +26,13 @@ public class SpecialiteServiceImpl implements SpecialiteService {
 	@Override
 	  public SpecialiteDto CreateSpecialite(SpecialiteDto specialiteDto) {
 	  
-	  Specialite checkSpecialite = specialiteRepository.findAllByNom(specialiteDto.getNom());
+		 Optional<Specialite>  checkSpecialite = specialiteRepository.findByNom(specialiteDto.getNom());
 	  
-	  if (checkSpecialite != null) 
+	  if (checkSpecialite.isPresent()) 
 		  throw new  RuntimeException("cette specialité est  déjà entregistrée");
 	  
 	  Specialite SpecialiteEntity = new Specialite();
-	  
+	  	
 	  BeanUtils.copyProperties(specialiteDto, SpecialiteEntity);
 	  
 	  Specialite newSpecialite =specialiteRepository.save(SpecialiteEntity); 
@@ -41,6 +40,7 @@ public class SpecialiteServiceImpl implements SpecialiteService {
 	  SpecialiteDto SpeDto = new SpecialiteDto();
 
 		BeanUtils.copyProperties(newSpecialite, SpeDto);
+		
 	  return SpeDto;
 	 
 
@@ -48,9 +48,9 @@ public class SpecialiteServiceImpl implements SpecialiteService {
 
 	@Override
 	public SpecialiteDto getSpecialite(String nom) {
-		Specialite specialiteEntity = specialiteRepository.findAllByNom(nom);
+		 Optional<Specialite>  specialiteEntity = specialiteRepository.findByNom(nom);
 		
-		if (specialiteEntity == null)
+		if (specialiteEntity.isPresent())
 			
 			throw new RuntimeException( " Aucune spécialité est enregistrée");
 		
@@ -64,28 +64,27 @@ public class SpecialiteServiceImpl implements SpecialiteService {
 	@Override
 	public SpecialiteDto getSpecialiteById(Long idSpecialite) {
 		
-		Optional<Specialite> specialiteEntity = specialiteRepository.findById(idSpecialite);
-		
-		if (specialiteEntity == null)
-			
+		Optional<Specialite> specialiteEntity = specialiteRepository.findByIdSpecialite(idSpecialite);
+		//AVEC optional  on peut remplacer if null par isPresent
+		if (!specialiteEntity.isPresent()) {
 			throw new RuntimeException( idSpecialite +" introuvable ");
+		}
 		
 		SpecialiteDto specialiteDto = new SpecialiteDto();
 		
-		BeanUtils.copyProperties(specialiteEntity, specialiteDto);
-		
+		BeanUtils.copyProperties(specialiteEntity.get(), specialiteDto);
+
 		return specialiteDto;
-		
-		
+			
 	}
 
 	@Override
 	public List<SpecialiteDto> getAllSpecialites() {
 	
-		List<Specialite> SpecialiteList = (List<Specialite>) specialiteRepository.findAll();
+		List<Specialite> SpecialiteList = specialiteRepository.findAll();
 			
 		List<SpecialiteDto> specialiteDtoList = new ArrayList<>();
-		
+		// revoir 
 		for (Specialite s : SpecialiteList) {
 
 			SpecialiteDto specialiteDto = new SpecialiteDto();
@@ -107,9 +106,9 @@ public class SpecialiteServiceImpl implements SpecialiteService {
 
 		Pageable pageableRequest = PageRequest.of(page, limit);
 
-		Page<Specialite> doctorPage = specialiteRepository.findAll(pageableRequest);
+		Page<Specialite> specialitePage = specialiteRepository.findAll(pageableRequest);
 
-		List<Specialite> specialites = doctorPage.getContent();
+		List<Specialite> specialites = specialitePage.getContent();
 
 		for (Specialite d : specialites) {
 
@@ -124,19 +123,20 @@ public class SpecialiteServiceImpl implements SpecialiteService {
 	}
 
 
+
+
 	@Override
-	public SpecialiteDto updateSpecialite(String nom, SpecialiteDto specialiteDto) {
+	public SpecialiteDto updateSpecialite(Long idSpecialite, SpecialiteDto specialiteDto) {
+
+		Optional<Specialite> specialiteEntity = specialiteRepository.findByIdSpecialite(idSpecialite);
+
+		if (!specialiteEntity.isPresent())
+			throw new RuntimeException("idSpecialite introuvable "+idSpecialite);
+
+		specialiteEntity.get().setNom(specialiteDto.getNom());
 	
-	
-		Specialite specialiteEntity = specialiteRepository.findAllByNom(nom);
 
-		if (specialiteEntity == null)
-			throw new UsernameNotFoundException(nom);
-
-		specialiteEntity.setNom(specialiteDto.getNom());
-		
-
-		Specialite specialiteUpdated = specialiteRepository.save(specialiteEntity);
+		Specialite specialiteUpdated = specialiteRepository.save(specialiteEntity.get());
 
 		SpecialiteDto speciaDto = new SpecialiteDto();
 
@@ -144,23 +144,21 @@ public class SpecialiteServiceImpl implements SpecialiteService {
 
 		return speciaDto;
 	}
-
-	
 	@Override
-	public void deleteSpecialite(String nom) {
+	public void deleteSpecialite(Long idSpecialite) {
 
-	Specialite specialiteEntity = (specialiteRepository.findAllByNom(nom));
+	Optional<Specialite> specialiteEntity = specialiteRepository.findByIdSpecialite(idSpecialite);
 
-	System.out.println("nom" + nom);
+	//.out.println("nom" + nom);
 	
 	System.out.println("specialiteEntity " + specialiteEntity);
 
-	if (specialiteEntity== null) {
+	if (!specialiteEntity.isPresent()) {
 		
 		throw new EntityNotFoundException("cette specialite n'existe pas");
 	}
 
-	specialiteRepository.delete(specialiteEntity);
+	specialiteRepository.delete(specialiteEntity.get());
 	
 	}
 

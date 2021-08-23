@@ -26,16 +26,14 @@ public class FicheServiceIpml implements FicheService {
 	@Override
 	public FicheDto CreateFiche(FicheDto ficheDto) {
 	
-		
-		  Fiche checkFiche = ficheRepository.findAllByDateCreation(ficheDto.getDateCreation());
+		Optional <Fiche> checkFiche = ficheRepository.findByDateCreation(ficheDto.getDateCreation());
 		  
-		  if (checkFiche != null) throw new
-		  RuntimeException("ce compte déjà entregistrer");
+		  if (checkFiche.isPresent()) throw new
+		  RuntimeException("cette fiche est déjà entregistrer");
 		  
 		  Fiche ficheEntity = new Fiche();
 		  
 		  BeanUtils.copyProperties(ficheDto, ficheEntity);
-		  
 		  
 		  Fiche newFiche = ficheRepository.save(ficheEntity);
 		  
@@ -43,15 +41,13 @@ public class FicheServiceIpml implements FicheService {
 		  
 		  BeanUtils.copyProperties(newFiche, fichDto);
 		  
-		  return fichDto;
-		 
-		
+		  return fichDto;	
 	}
 
 	@Override
 	public FicheDto getFicheById(Long idFiche) {
 		
-     Optional<Fiche> ficheEntity = ficheRepository.findById(idFiche);
+     Optional<Fiche> ficheEntity = ficheRepository.findByIdFiche(idFiche);
 		
 		if (ficheEntity == null)
 			
@@ -59,7 +55,7 @@ public class FicheServiceIpml implements FicheService {
 		
 		FicheDto ficheDto = new FicheDto();
 		
-		BeanUtils.copyProperties(ficheEntity, ficheDto);
+		BeanUtils.copyProperties(ficheEntity.get(), ficheDto);
 		
 		return ficheDto;
 	}
@@ -110,45 +106,41 @@ public class FicheServiceIpml implements FicheService {
 		return ficheListDto;
 	}
 
-	
-	
 	  @Override public FicheDto updateFiche(Long idFiche, FicheDto ficheDto) {
 	  
 	  
-	  Fiche ficheEntity = ficheRepository.findAllByIdFiche(idFiche);
+		  Optional <Fiche>ficheEntity = ficheRepository.findByIdFiche(idFiche);
 	  
-	  if (ficheEntity == null) throw new
-	  RuntimeException("cette fiche est introuvable");
+	  if (!ficheEntity.isPresent()) throw new
+	  RuntimeException("cette fiche est introuvable"+ idFiche);
 	  
-	  ficheEntity.setCourbe(ficheDto.getCourbe());
-	  ficheEntity.setDateCreation(ficheDto.getDateCreation());
-	  ficheEntity.setInfirmier(ficheDto.getInfirmier());
-	  ficheEntity.setMedecin(ficheDto.getMedecin());
-	  ficheEntity.setPatient(ficheDto.getPatient());
+	  ficheEntity.get().setCourbe(ficheDto.getCourbe());
+	  ficheEntity.get().setDateCreation(ficheDto.getDateCreation());
+	  ficheEntity.get().setInfirmier(ficheDto.getInfirmier());
+	  ficheEntity.get().setMedecin(ficheDto.getMedecin());
+	  ficheEntity.get().setPatient(ficheDto.getPatient());
 	  
 	  
-	  Fiche ficheUpdated = ficheRepository.save(ficheEntity);
+	  Fiche ficheUpdated = ficheRepository.save(ficheEntity.get());
 	  
 	  FicheDto fichDto = new FicheDto();
 	  
 	  BeanUtils.copyProperties(ficheUpdated, fichDto);
 	  
-	  return fichDto; }
-	 
-
-	
-	  @Override public void deleteFiche(Long idFiche) {
-	  
-	  Fiche ficheEntity = ficheRepository.findAllByIdFiche(idFiche);
-	  
-	  System.out.println("idFiche " + idFiche); System.out.println("ficheEntity " + ficheEntity);
-	  
-	  if (ficheEntity == null) { 
-		  throw new EntityNotFoundException("cette fiche  n'existe pas"); }
-	  
-	  ficheRepository.delete(ficheEntity);
-	  
+	  return fichDto; 
 	  }
 	 
-
+	  @Override public void deleteFiche(Long idFiche) {
+	  
+	 Optional<Fiche>  ficheEntity = ficheRepository.findByIdFiche(idFiche);
+	  
+	  System.out.println("idFiche " + idFiche); 
+	  System.out.println("ficheEntity " + ficheEntity);
+	  
+	  if (ficheEntity.isPresent()) { 
+		  throw new EntityNotFoundException("cette fiche n'existe pas"); }
+	  
+	  ficheRepository.delete(ficheEntity.get());
+	  
+	  }
 }

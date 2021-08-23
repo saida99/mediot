@@ -5,19 +5,19 @@ import org.ids.shared.dto.SpecialiteDto;
 
 public interface SpecialiteService {
 	
-	SpecialiteDto CreateSpecialite( SpecialiteDto specialiteDto);
+	SpecialiteDto CreateSpecialite(SpecialiteDto specialiteDto);
 	
 	SpecialiteDto getSpecialite(String nom);
 
-	SpecialiteDto getSpecialiteById(Long specialiteId);
+	SpecialiteDto getSpecialiteById(Long idSpecialite);
 	
 	public 	List <SpecialiteDto> getAllSpecialites();
 	
 	List<SpecialiteDto> getAllSpecialites(int page, int limit);
 
-	SpecialiteDto updateSpecialite(String nom, SpecialiteDto specialiteDto);
+	SpecialiteDto updateSpecialite(Long idSpecialite, SpecialiteDto specialiteDto);
 
-	void deleteSpecialite (String nom);
+	void deleteSpecialite (Long idSpecialite);
 
 	
 	

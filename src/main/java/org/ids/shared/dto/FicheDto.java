@@ -19,7 +19,7 @@ import lombok.ToString;
 public class FicheDto implements Serializable{
 
 	private static final long serialVersionUID = 1677883997897642148L;
-	private int idFiche;
+	private long idFiche;
 	private String courbe;
 	private Date dateCreation;
 	private Medecin medecin;

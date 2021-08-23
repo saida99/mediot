@@ -11,6 +11,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,15 +34,19 @@ public class Infirmier extends Personne {
 	@Column(unique = true, nullable = false)
 	private long idInfirmier;
 	
+	@JsonIgnoreProperties
 	@ManyToMany( mappedBy = "infirmiers")
 	private List <Patient> patients ;
 	
+	@JsonIgnoreProperties("infirmier")
 	@OneToMany(mappedBy = "infirmier")
 	private List <Fiche> fiches ;
 	
+	@JsonIgnoreProperties
 	@OneToMany(mappedBy = "infirmier")
 	private List <RendezVous> rendezVous ;
 	
+	@JsonIgnoreProperties
 	@ManyToOne
 	private Medecin  medecin;
 

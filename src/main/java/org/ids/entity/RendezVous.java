@@ -3,13 +3,19 @@ package org.ids.entity;
 import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +23,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -28,7 +33,7 @@ public class RendezVous implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(unique = true, nullable = false)
-	private Long IdRendezVous;
+	private Long idRendezVous;
 	@Column(nullable = false)
 	private Date dateConsultation;
 	@Column(nullable = false)
@@ -38,13 +43,16 @@ public class RendezVous implements Serializable {
 
 	private LocalTime heureDebut;
 	private LocalTime heureFin;
-
-	@ManyToOne
+	
+	@JsonIgnoreProperties
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Medecin medecin;
 	
-	@OneToOne
+	@JsonIgnoreProperties
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Message message  ;
 	
-	@ManyToOne
+	@JsonIgnoreProperties
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Infirmier infirmier;
 }

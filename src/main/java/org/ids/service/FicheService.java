@@ -16,10 +16,5 @@ public interface FicheService {
 	FicheDto updateFiche(Long idFiche, FicheDto ficheDto);
 	
 	void deleteFiche (Long idFiche);
-	
-	
-
-	
-	
 
 }

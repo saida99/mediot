@@ -41,7 +41,7 @@ public class SpecialiteController {
 			
 			SpecialiteRespense specialiteResp = new SpecialiteRespense();
 			BeanUtils.copyProperties(specialite, specialiteResp);
-			System.out.println(specialiteResp);
+			//System.out.println(specialiteResp);
 			userRespense.add(specialiteResp);
 			
 		}
@@ -50,18 +50,20 @@ public class SpecialiteController {
 		
 	}
 	
-	@GetMapping("/specialites/{specialiteId}")
-	public SpecialiteRespense getSpecialiteById(@PathVariable Long specialiteId) {
+	@GetMapping("/specialites/{idSpecialite}")
+	public SpecialiteRespense getSpecialiteById(@PathVariable Long idSpecialite) {
 
-		SpecialiteDto specialiteDto = new SpecialiteDto();
+		SpecialiteDto specialiteDto ;
 		
 		SpecialiteRespense specialiteRespense = new SpecialiteRespense();
 		try {
 			
-			specialiteDto = specialiteService.getSpecialiteById(specialiteId);
+			specialiteDto = specialiteService.getSpecialiteById(idSpecialite);
 			
 			BeanUtils.copyProperties(specialiteDto, specialiteRespense);
-			System.out.println(specialiteRespense);
+			
+		//	System.out.println(specialiteRespense);
+			
 		}catch(IllegalStateException e) {
 			e.printStackTrace();
 		}
@@ -77,29 +79,30 @@ public class SpecialiteController {
 		
 		SpecialiteDto specialiteDto = new SpecialiteDto();
 		
-		SpecialiteRespense SpecialiteRequest = new SpecialiteRespense(); 
+		//SpecialiteRespense SpecialiteRequest = new SpecialiteRespense(); 
 		
-			BeanUtils.copyProperties(SpecialiteRequest, specialiteDto);
+			BeanUtils.copyProperties(specialiteRequest, specialiteDto);
 			
 			SpecialiteDto CreatedSpecialiteDto = specialiteService.CreateSpecialite(specialiteDto);	
 			
-			BeanUtils.copyProperties(CreatedSpecialiteDto, SpecialiteRequest);
+			SpecialiteRespense SpecialiteResp = new SpecialiteRespense();
+			BeanUtils.copyProperties(CreatedSpecialiteDto, SpecialiteResp);
 			
 	
-		return new ResponseEntity<SpecialiteRespense>(SpecialiteRequest, HttpStatus.CREATED);
+		return new ResponseEntity<SpecialiteRespense>(SpecialiteResp, HttpStatus.CREATED);
 	
 	}
 
 	//update 
-			@PutMapping("/specialites/{id}")
-			public ResponseEntity<SpecialiteRespense> updateSpecialite(@PathVariable String id,@RequestBody SpecialiteRequest specialiteRequest){
+		@PutMapping("/specialites/{idSpecialite}")
+			public ResponseEntity<SpecialiteRespense> updateSpecialite(@PathVariable Long idSpecialite,@RequestBody SpecialiteRequest specialiteRequest){
 				
 				SpecialiteDto specialiteDto = new SpecialiteDto();
 				
 				BeanUtils.copyProperties(specialiteRequest, specialiteDto);
 				 
-				SpecialiteDto updateSpecialite = specialiteService.updateSpecialite(id, specialiteDto);
-				
+				SpecialiteDto updateSpecialite = specialiteService.updateSpecialite(idSpecialite, specialiteDto);
+				//System.out.println(specialiteDto);
 				SpecialiteRespense specialiteRespense = new SpecialiteRespense();
 				
 				BeanUtils.copyProperties(updateSpecialite, specialiteRespense);
@@ -109,10 +112,10 @@ public class SpecialiteController {
 			
 			 
 		//delete specialite rest
-		@DeleteMapping("/specialites/{specialiteId}")
-		public ResponseEntity <Map<String,Boolean>> deleteSpecialites(@PathVariable String specialiteId){
+		@DeleteMapping("/specialites/{idSpecialite}")
+		public ResponseEntity <Map<String,Boolean>> deleteSpecialites(@PathVariable Long idSpecialite){
 			
-			specialiteService.deleteSpecialite(specialiteId);
+			specialiteService.deleteSpecialite(idSpecialite);
 			
 			Map<String,Boolean> response = new HashMap<>();
 			

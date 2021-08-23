@@ -9,9 +9,14 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
 public interface SpecialiteRepository extends JpaRepository<Specialite, Long> {
-	public Specialite findAllByNom(String nom);
+	
+	
+	//public Specialite findAllById(Long idSpecialite);
 
 	public Optional<Specialite> findByIdSpecialite(Long idSpecialite);
+
+	public  Optional<Specialite>  findByNom(String nom);
+
 
 	
 
